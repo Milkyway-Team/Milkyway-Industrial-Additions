@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "mw_industry_additions:block/bloomery_furnace_chamber"
+    },
+    "facing=south": {
+      "model": "mw_industry_additions:block/bloomery_furnace_chamber",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mw_industry_additions:block/bloomery_furnace_chamber",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "mw_industry_additions:block/bloomery_furnace_chamber",
+      "y": 90
     }
   }
 }

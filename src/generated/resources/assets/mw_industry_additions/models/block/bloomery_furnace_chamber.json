@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/orientable",
   "textures": {
-    "all": "mw_industry_additions:block/bloomery_furnace_chamber"
+    "side": "mw_industry_additions:block/bloomery/bloomery_furnace_chamber_side",
+    "front": "mw_industry_additions:block/bloomery/bloomery_furnace_chamber_front",
+    "top": "mw_industry_additions:block/bloomery/bloomery_furnace_chamber_top"
   }
 }

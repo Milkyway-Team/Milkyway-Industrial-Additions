@@ -1,6 +1,7 @@
 package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.*;
+import com.mw_team.mw_industry_additions.blocks.*;
 import com.mw_team.mw_industry_additions.datagen.*;
 import net.minecraft.resources.*;
 import net.minecraft.tags.*;
@@ -28,6 +29,7 @@ public class ModBlocks{
     public static final RegistryObject<Block> BLOOMERY_FURNACE_HEARTH, BLOOMERY_FURNACE_CHAMBER, BLOOMERY_FURNACE_CHIMNEY;
 
     static{
+        final String bloomeryTex =  "block/bloomery/bloomery_furnace";
         BLOOMERY_FURNACE_HEARTH = registerBlock(
         "bloomery_furnace_hearth",
         () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
@@ -37,9 +39,13 @@ public class ModBlocks{
 
         BLOOMERY_FURNACE_CHAMBER = registerBlock(
         "bloomery_furnace_chamber",
-        () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
+        () -> new BloomeryChamber(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
         Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
-        CreativeModeTab.TAB_DECORATIONS
+        CreativeModeTab.TAB_DECORATIONS,
+        properties -> properties,
+        (block, state) -> {
+                state.horizontalBlock(block,state.modLoc(bloomeryTex+"_chamber_side"),state.modLoc(bloomeryTex+"_chamber_front"),state.modLoc(bloomeryTex+"_chamber_top"));
+            }
         );
 
         BLOOMERY_FURNACE_CHIMNEY = registerBlock(
@@ -60,12 +66,16 @@ public class ModBlocks{
     }
 
     public static RegistryObject<Block> registerBlock(String name, Supplier<Block> sup, Array<TagKey<Block>> taglist, CreativeModeTab tab, UnaryOperator<Item.Properties> itemprops){
+        return registerBlock(name,sup,taglist,tab,itemprops,(block, states) -> {states.simpleBlock(block);});
+    }
+
+    public static RegistryObject<Block> registerBlock(String name, Supplier<Block> sup, Array<TagKey<Block>> taglist, CreativeModeTab tab, UnaryOperator<Item.Properties> itemprops ,BiConsumer<Block,ModBlockStateProvider> state){
         var p = BLOCKS.register(name, sup);
         tags.put(p, taglist);
         var item = BLOCK_ITEMS.register(name, () -> new BlockItem(p.get(), itemprops.apply(new Item.Properties().tab(tab))));
         ModItems.models.put(item,(i, model) -> model.blockItem(i));
         ///TEMP
-        states.put(p, (block, states) -> {states.simpleBlock(block);});
+        states.put(p, state);
         return p;
     }
 }
