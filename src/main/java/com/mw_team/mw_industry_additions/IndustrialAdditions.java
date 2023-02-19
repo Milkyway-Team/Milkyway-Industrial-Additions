@@ -1,8 +1,8 @@
 package com.mw_team.mw_industry_additions;
 
 import com.mojang.logging.LogUtils;
+import com.mw_team.mw_industry_additions.init.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,14 +18,18 @@ import org.slf4j.Logger;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("mw_industry_additions")
+@Mod(IndustrialAdditions.MOD_ID)
 public class IndustrialAdditions
 {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static final String MOD_ID = "mw_industry_additions";
 
     public IndustrialAdditions()
     {
+        var eventbus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModBlocks.BLOCKS.register(eventbus);
+        ModBlocks.BLOCK_ITEMS.register(eventbus);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -40,8 +44,6 @@ public class IndustrialAdditions
     private void setup(final FMLCommonSetupEvent event)
     {
         // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
@@ -74,8 +76,8 @@ public class IndustrialAdditions
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
         {
-            // Register a new block here
-            LOGGER.info("HELLO from Register Block");
+            LOGGER.info("Registering blocks > --- ");
+
         }
     }
 }

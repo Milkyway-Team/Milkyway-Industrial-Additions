@@ -1,20 +1,23 @@
-buildscript {
-    repositories {
+buildscript{
+    repositories{
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
+        maven{ url = 'https://maven.minecraftforge.net' }
+        maven{ url = 'https://maven.parchmentmc.org' }
         mavenCentral()
     }
-    dependencies {
+    dependencies{
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath 'org.parchmentmc:librarian:1.+'
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-plugins {
+plugins{
     id 'eclipse'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 apply plugin: 'net.minecraftforge.gradle'
-
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
 version = '1.0'
 group = 'com.mw_team.mw_industry_additions' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -24,7 +27,7 @@ archivesBaseName = 'mw_industry_additions'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
+minecraft{
     // The mappings can be changed at any time and must be in the following format.
     // Channel:   Version:
     // official   MCVersion             Official field/method names from Mojang mapping files
@@ -38,14 +41,14 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'parchment', version: '1.18.2-2022.08.07-1.18.2'
 
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
+    runs{
+        client{
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -63,14 +66,14 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'mw_industry_additions'
 
-            mods {
-                mw_industry_additions {
+            mods{
+                mw_industry_additions{
                     source sourceSets.main
                 }
             }
         }
 
-        server {
+        server{
             workingDirectory project.file('run')
 
             property 'forge.logging.markers', 'REGISTRIES'
@@ -80,8 +83,8 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'mw_industry_additions'
 
-            mods {
-                mw_industry_additions {
+            mods{
+                mw_industry_additions{
                     source sourceSets.main
                 }
             }
@@ -90,7 +93,7 @@ minecraft {
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
-        gameTestServer {
+        gameTestServer{
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -108,14 +111,14 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'mw_industry_additions'
 
-            mods {
-                mw_industry_additions {
+            mods{
+                mw_industry_additions{
                     source sourceSets.main
                 }
             }
         }
 
-        data {
+        data{
             workingDirectory project.file('run')
 
             property 'forge.logging.markers', 'REGISTRIES'
@@ -125,19 +128,20 @@ minecraft {
             // Specify the mw_industry_additions for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', 'mw_industry_additions', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
-            mods {
-                mw_industry_additions {
+            mods{
+                mw_industry_additions{
                     source sourceSets.main
                 }
             }
+
         }
     }
 }
 
 // Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources{ srcDir 'src/generated/resources' }
 
-repositories {
+repositories{
     // Put repositories for dependencies here
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
@@ -146,12 +150,20 @@ repositories {
     //     dir 'libs'
     // }
 }
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
 
-dependencies {
+
+dependencies{
     // Specify the version of Minecraft to use. If this is any group other than 'net.minecraft', it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency, and its patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.0'
+    shade  'org.mini2Dx:gdx-collections:1.9.13'
+    shade  group: 'org.json', name: 'json', version: '20220924'
+    minecraftLibrary 'org.mini2Dx:gdx-collections:1.9.13'
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
@@ -167,8 +179,8 @@ dependencies {
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
-jar {
-    manifest {
+jar{
+    manifest{
         attributes([
                 "Specification-Title"     : "mw_industry_additions",
                 "Specification-Vendor"    : "mw_team",
@@ -187,19 +199,38 @@ jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 // publish.dependsOn('reobfJar')
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
+publishing{
+    publications{
+        mavenJava(MavenPublication){
             artifact jar
         }
     }
-    repositories {
-        maven {
+    repositories{
+        maven{
             url "file://${project.projectDir}/mcmodsrepo"
         }
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
+tasks.withType(JavaCompile).configureEach{
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+
+task generateJson(type: JavaExec){
+    group = 'mod'
+    mainClass.set("com.mw_team.mw_industry_additions.datagen.AssetGenerator")
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+shadowJar{
+    configurations = [project.configurations.shade]
+    minimize()
+}
+
+assemble.dependsOn shadowJar
+//project.tasks.build.dependsOn project.tasks.shadowJar
+
+reobf{
+    shadowJar{}
+}
+

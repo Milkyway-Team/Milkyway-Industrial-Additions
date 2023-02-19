@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "mw_industry_additions:bloomery_furnace_chamber",
+    "mw_industry_additions:bloomery_furnace_chimney",
+    "mw_industry_additions:bloomery_furnace_hearth"
+  ]
+}

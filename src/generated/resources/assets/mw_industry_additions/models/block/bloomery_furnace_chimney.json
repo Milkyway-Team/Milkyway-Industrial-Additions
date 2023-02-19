@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mw_industry_additions:block/bloomery_furnace_chimney"
+  }
+}
