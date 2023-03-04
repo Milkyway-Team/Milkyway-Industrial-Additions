@@ -1,0 +1,12 @@
+{
+  "type": "mw_industry_additions:trading",
+  "ingredients": [
+    {
+      "item": "minecraft:amethyst_shard",
+      "count": 3
+    }
+  ],
+  "output": {
+    "item": "minecraft:redstone_block"
+  }
+}

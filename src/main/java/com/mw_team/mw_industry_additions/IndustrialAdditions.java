@@ -1,6 +1,7 @@
 package com.mw_team.mw_industry_additions;
 
 import com.mojang.logging.LogUtils;
+import com.mw_team.mw_industry_additions.client.ClientSetup;
 import com.mw_team.mw_industry_additions.init.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,8 +29,13 @@ public class IndustrialAdditions
     public IndustrialAdditions()
     {
         var eventbus = FMLJavaModLoadingContext.get().getModEventBus();
+        eventbus.addListener(ClientSetup::init);
         ModBlocks.BLOCKS.register(eventbus);
         ModBlocks.BLOCK_ITEMS.register(eventbus);
+        ModBlockEntities.BLOCK_ENTITIES.register(eventbus);
+        ModMenuTypes.MENUS.register(eventbus);
+        ModRecipeTypes.register(eventbus);
+
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
