@@ -1,6 +1,7 @@
 package com.mw_team.mw_industry_additions.datagen;
 
 import net.minecraft.data.*;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraftforge.common.data.*;
 import net.minecraftforge.eventbus.api.*;
 import net.minecraftforge.fml.common.Mod.*;
