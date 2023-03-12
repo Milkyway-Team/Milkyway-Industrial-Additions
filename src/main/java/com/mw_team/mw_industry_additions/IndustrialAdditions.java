@@ -30,6 +30,8 @@ public class IndustrialAdditions
         var eventbus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(eventbus);
         ModBlocks.BLOCK_ITEMS.register(eventbus);
+        ModBlocks.BLOCK_ENTITY_TYPES.register(eventbus);
+        ModBlocks.SCREEN_CONTAINERS.register(eventbus);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading

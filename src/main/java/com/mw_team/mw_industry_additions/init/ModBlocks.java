@@ -2,24 +2,34 @@ package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.*;
 import com.mw_team.mw_industry_additions.blocks.*;
+import com.mw_team.mw_industry_additions.blocks.entities.*;
+import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberContainer;
 import com.mw_team.mw_industry_additions.datagen.*;
+import net.minecraft.core.*;
 import net.minecraft.resources.*;
 import net.minecraft.tags.*;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.*;
+import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.material.*;
 import net.minecraftforge.registries.*;
 import org.mini2Dx.gdx.utils.*;
 
 import java.util.function.*;
 
+import static com.mw_team.mw_industry_additions.IndustrialAdditions.MOD_ID;
+
 @SuppressWarnings("unchecked")
 public class ModBlocks{
     //registeries
-    public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, IndustrialAdditions.MOD_ID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, IndustrialAdditions.MOD_ID);
+    public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, MOD_ID);
+    public static final DeferredRegister<MenuType<?>> SCREEN_CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
     //tags
-    public static final TagKey<Block> BLOOMERY = BlockTags.create(new ResourceLocation(IndustrialAdditions.MOD_ID, "bloomery_furnace"));
+    public static final TagKey<Block> BLOOMERY = BlockTags.create(new ResourceLocation(MOD_ID, "bloomery_furnace"));
 
     //mapping
     public static ObjectMap<RegistryObject<Block>, Array<TagKey<Block>>> tags = new ObjectMap<>();
@@ -27,32 +37,42 @@ public class ModBlocks{
 
     //blocks
     public static final RegistryObject<Block> BLOOMERY_FURNACE_HEARTH, BLOOMERY_FURNACE_CHAMBER, BLOOMERY_FURNACE_CHIMNEY;
+    //block entities
+    public static final RegistryObject<BlockEntityType<BloomeryChamberEntity>> BLOOMERY_CHAMBER_ENTITY;
+    public static final RegistryObject<MenuType<BloomeryChamberContainer>> BLOOMERY_CHAMBER_CONTAINER
+            = SCREEN_CONTAINERS.register("bloomery_chamber", ()-> new MenuType<>(BloomeryChamberContainer::new));
+
 
     static{
         final String bloomeryTex =  "block/bloomery/bloomery_furnace";
         BLOOMERY_FURNACE_HEARTH = registerBlock(
-        "bloomery_furnace_hearth",
-        () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
-        Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
-        CreativeModeTab.TAB_DECORATIONS
+            "bloomery_furnace_hearth",
+            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
+            Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
+            CreativeModeTab.TAB_DECORATIONS
         );
 
         BLOOMERY_FURNACE_CHAMBER = registerBlock(
-        "bloomery_furnace_chamber",
-        () -> new BloomeryChamber(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
-        Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
-        CreativeModeTab.TAB_DECORATIONS,
-        properties -> properties,
-        (block, state) -> {
+            "bloomery_furnace_chamber",
+            () -> new BloomeryChamber(Block.Properties.of(Material.STONE).strength(4f, 4000f).requiresCorrectToolForDrops() ),
+            Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
+            CreativeModeTab.TAB_DECORATIONS,
+            properties -> properties,
+            (block, state) -> {
                 state.horizontalBlock(block,state.modLoc(bloomeryTex+"_chamber_side"),state.modLoc(bloomeryTex+"_chamber_front"),state.modLoc(bloomeryTex+"_chamber_top"));
             }
         );
 
+        BLOOMERY_CHAMBER_ENTITY = BLOCK_ENTITY_TYPES.register("bloomery_chamber_entity",
+                    () -> BlockEntityType.Builder.of(BloomeryChamberEntity::new, BLOOMERY_FURNACE_CHAMBER.get()).build(null));
+
+
+
         BLOOMERY_FURNACE_CHIMNEY = registerBlock(
-        "bloomery_furnace_chimney",
-        () -> new Block(Block.Properties.of(Material.STONE).strength(2.5f, 2000f).requiresCorrectToolForDrops() ),
-        Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
-        CreativeModeTab.TAB_DECORATIONS
+            "bloomery_furnace_chimney",
+            () -> new Block(Block.Properties.of(Material.STONE).strength(2.5f, 2000f).requiresCorrectToolForDrops() ),
+            Array.with(BlockTags.NEEDS_STONE_TOOL, BLOOMERY),
+            CreativeModeTab.TAB_DECORATIONS
         );
     }
 
