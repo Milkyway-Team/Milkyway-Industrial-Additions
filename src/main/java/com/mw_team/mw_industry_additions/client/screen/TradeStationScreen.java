@@ -1,4 +1,4 @@
-package com.mw_team.mw_industry_additions.blocks.entity.screens;
+package com.mw_team.mw_industry_additions.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

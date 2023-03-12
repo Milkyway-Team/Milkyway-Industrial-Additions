@@ -1,7 +1,7 @@
 package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.IndustrialAdditions;
-import com.mw_team.mw_industry_additions.blocks.entity.screens.TradeStationMenu;
+import com.mw_team.mw_industry_additions.client.screen.TradeStationMenu;
 import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

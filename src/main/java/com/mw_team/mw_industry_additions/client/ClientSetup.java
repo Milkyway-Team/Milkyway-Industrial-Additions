@@ -1,6 +1,6 @@
 package com.mw_team.mw_industry_additions.client;
 
-import com.mw_team.mw_industry_additions.blocks.entity.screens.TradeStationScreen;
+import com.mw_team.mw_industry_additions.client.screen.TradeStationScreen;
 import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberScreen;
 import com.mw_team.mw_industry_additions.init.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;

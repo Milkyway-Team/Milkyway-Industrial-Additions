@@ -1,6 +1,6 @@
 package com.mw_team.mw_industry_additions.blocks.entity;
 
-import com.mw_team.mw_industry_additions.blocks.entity.screens.TradeStationMenu;
+import com.mw_team.mw_industry_additions.client.screen.TradeStationMenu;
 import com.mw_team.mw_industry_additions.blocks.recipes.TradeStationRecipe;
 import com.mw_team.mw_industry_additions.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;

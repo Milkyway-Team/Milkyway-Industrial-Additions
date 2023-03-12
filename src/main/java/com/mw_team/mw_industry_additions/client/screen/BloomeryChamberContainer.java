@@ -23,9 +23,9 @@ public class BloomeryChamberContainer extends InventoryContainerMenu {
 
     public BloomeryChamberContainer(int id, Inventory playerInv, SegmentedItemStackHandler slots, ContainerData data, BlockPos pos) {
         super(ModMenuTypes.BLOOMERY_CHAMBER_CONTAINER.get(), id,slots,pos);
-        addPlayerInventory(playerInv,22,118);
-        addColumn(slots,0,14,24,3);
-        addSingle(slots, 3,94,46);
-        addColumn(slots,4,172,24,3);
+        addPlayerInventory(playerInv,8,112);
+        addColumn(slots,0,14,24,2);
+        addGrid(slots,  2,94,46,2,2);
+        addColumn(slots,6,172,24,2);
     }
 }

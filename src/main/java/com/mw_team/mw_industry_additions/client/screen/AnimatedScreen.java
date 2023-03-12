@@ -12,6 +12,7 @@ import com.mw_team.mw_industry_additions.utils.Utils;
 import com.mw_team.mw_industry_additions.utils.animation.ParameterMap;
 import com.mw_team.mw_industry_additions.utils.animation.StateMap;
 import com.mw_team.mw_industry_additions.utils.ui.SpriteDrawer;
+import com.mw_team.mw_industry_additions.utils.ui.TextureRegion;
 import com.mw_team.mw_industry_additions.utils.ui.UITextures;
 import com.mw_team.mw_industry_additions.utils.ui.components.UIHandler;
 import com.mw_team.mw_industry_additions.utils.ui.particles.UIParticleSystem;
@@ -41,9 +42,8 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
     public UIParticleSystem particles;
     public UIHandler ui;
     public SpriteDrawer spriteDrawer;
-    public AnimatedScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, float duration,  Cons<ParameterMap> cons) {
+    public AnimatedScreen(T pMenu, Inventory pPlayerInventory, Component pTitle,Cons<ParameterMap> cons) {
         super(pMenu, pPlayerInventory, pTitle);
-        this.duration=duration;
         stateMap = new StateMap((a)->null,pmap -> {
             pmap.add("x_offset",0f);
             pmap.add("y_offset", 0f);
@@ -63,7 +63,7 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
 
     public int ox,oy;
     @Override
-    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY){
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta){
         spriteDrawer.reset(matrices);
         if(ox==0||oy==0){
             ox=leftPos;oy=topPos;
@@ -160,6 +160,7 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0f);
     }
 
     public void alpha(float alpha){
@@ -176,6 +177,13 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
         sy0 = Mth.clamp(sy0,0,1);
         sy1 = Mth.clamp(sy1,0,1);
         blit(matrices, (int)(x+sx0*uw), (int)(y+sy0*vh), (int)(u+sx0*uw), (int)(v+sy0*vh), (int)(uw * (sx1-sx0)), (int)(vh * (sy1-sy0)));
+    }
+
+    public void drawTextureRegion(PoseStack matrices, TextureRegion tr, int x,int y){
+        if(tr.getTexid()!=RenderSystem.getTextureId(0)){
+            RenderSystem.setShaderTexture(0,tr.texture);
+        }
+        blit(matrices, x, y, (int)(tr.u*tr.w), (int)(tr.v*tr.h), (int)(tr.w), (int)(tr.h));
     }
 
     public void drawTexturedQuadWH(PoseStack matrices, float[][] pos, float u, float v, float regionWidth, float regionHeight) {

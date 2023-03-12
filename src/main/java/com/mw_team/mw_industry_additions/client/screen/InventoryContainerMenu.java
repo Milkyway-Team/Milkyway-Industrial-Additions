@@ -70,6 +70,14 @@ public class InventoryContainerMenu extends AbstractContainerMenu {
             this.addSlot(new SlotItemHandler(pl, m+index, x+ m * 18 , y));
         }
     }
+
+    public void addGrid(IItemHandler pl, int index, int x, int y, int w, int h){
+        for (int m = 0; m < w; ++m) {
+            for (int o = 0; o < h; ++o) {
+                this.addSlot(new SlotItemHandler(pl, index++, x+ m * 18, y + o * 18));
+            }
+        }
+    }
     /*
     public void addHiddenSlots(HiddenInventory pl){
         for (int m = 0; m < pl.size(); ++m) {
