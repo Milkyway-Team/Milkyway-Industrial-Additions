@@ -1,8 +1,8 @@
 package com.mw_team.mw_industry_additions.blocks.entity;
 
 import com.mw_team.mw_industry_additions.blocks.entity.screens.TradeStationMenu;
+import com.mw_team.mw_industry_additions.blocks.recipes.TradeStationRecipe;
 import com.mw_team.mw_industry_additions.init.ModBlockEntities;
-import com.mw_team.mw_industry_additions.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;

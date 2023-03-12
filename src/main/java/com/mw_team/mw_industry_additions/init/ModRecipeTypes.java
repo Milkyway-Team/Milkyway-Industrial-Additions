@@ -1,7 +1,7 @@
 package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.IndustrialAdditions;
-import com.mw_team.mw_industry_additions.blocks.entity.TradeStationRecipe;
+import com.mw_team.mw_industry_additions.blocks.recipes.TradeStationRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

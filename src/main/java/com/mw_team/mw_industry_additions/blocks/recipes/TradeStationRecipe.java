@@ -1,4 +1,4 @@
-package com.mw_team.mw_industry_additions.blocks.entity;
+package com.mw_team.mw_industry_additions.blocks.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

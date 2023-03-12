@@ -2,6 +2,7 @@ package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.IndustrialAdditions;
 import com.mw_team.mw_industry_additions.blocks.entity.screens.TradeStationMenu;
+import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -17,6 +18,8 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<TradeStationMenu>> trader_menu =
             registerMenuType(TradeStationMenu::new, "trade_station_menu");
+    public static final RegistryObject<MenuType<BloomeryChamberContainer>> BLOOMERY_CHAMBER_CONTAINER
+            = MENUS.register("bloomery_chamber", ()-> new MenuType<>(BloomeryChamberContainer::new));
 
 
 

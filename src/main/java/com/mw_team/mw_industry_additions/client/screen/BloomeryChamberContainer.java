@@ -1,6 +1,7 @@
 package com.mw_team.mw_industry_additions.client.screen;
 
 import com.mw_team.mw_industry_additions.init.ModBlocks;
+import com.mw_team.mw_industry_additions.init.ModMenuTypes;
 import com.mw_team.mw_industry_additions.meta.inventory.SegmentedItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
@@ -21,7 +22,7 @@ public class BloomeryChamberContainer extends InventoryContainerMenu {
     }
 
     public BloomeryChamberContainer(int id, Inventory playerInv, SegmentedItemStackHandler slots, ContainerData data, BlockPos pos) {
-        super(ModBlocks.BLOOMERY_CHAMBER_CONTAINER.get(), id,slots,pos);
+        super(ModMenuTypes.BLOOMERY_CHAMBER_CONTAINER.get(), id,slots,pos);
         addPlayerInventory(playerInv,22,118);
         addColumn(slots,0,14,24,3);
         addSingle(slots, 3,94,46);

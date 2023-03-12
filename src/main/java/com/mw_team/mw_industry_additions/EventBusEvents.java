@@ -1,6 +1,6 @@
 package com.mw_team.mw_industry_additions;
 
-import com.mw_team.mw_industry_additions.blocks.entity.TradeStationRecipe;
+import com.mw_team.mw_industry_additions.blocks.recipes.TradeStationRecipe;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.event.RegistryEvent;
