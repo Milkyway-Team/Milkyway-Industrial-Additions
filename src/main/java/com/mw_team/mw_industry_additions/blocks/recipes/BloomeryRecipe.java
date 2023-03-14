@@ -6,8 +6,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.*;
 import net.minecraftforge.common.util.*;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class BloomeryRecipe implements Recipe<Container>{
+public class BloomeryRecipe implements Recipe<RecipeWrapper>{
 
     public final int time;
     public final int minTemp;
@@ -22,12 +23,12 @@ public class BloomeryRecipe implements Recipe<Container>{
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel){
+    public boolean matches(RecipeWrapper pContainer, Level pLevel){
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container pContainer){
+    public ItemStack assemble(RecipeWrapper pContainer){
         return null;
     }
 

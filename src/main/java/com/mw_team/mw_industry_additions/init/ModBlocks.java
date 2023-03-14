@@ -1,18 +1,13 @@
 package com.mw_team.mw_industry_additions.init;
 
-import com.mw_team.mw_industry_additions.*;
 import com.mw_team.mw_industry_additions.blocks.*;
 import com.mw_team.mw_industry_additions.blocks.entities.*;
-import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberContainer;
 import com.mw_team.mw_industry_additions.datagen.*;
-import net.minecraft.core.*;
 import net.minecraft.resources.*;
 import net.minecraft.tags.*;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.*;
-import net.minecraft.world.level.block.state.*;
 import net.minecraft.world.level.material.*;
 import net.minecraftforge.registries.*;
 import org.mini2Dx.gdx.utils.*;

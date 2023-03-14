@@ -6,7 +6,9 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.*;
 import net.minecraft.network.protocol.*;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.*;
@@ -19,6 +21,7 @@ import org.mini2Dx.gdx.utils.*;
 public class BasicBlockEntity extends BlockEntity{
     protected boolean needsModelUpdate = false;
     protected boolean needsStateUpdate = false;
+    protected boolean needsBlockUpdate = false;
     SyncedField[] syncedFields;
     BlockEntityCapabilityManager[] capabilityManagers;
 
@@ -70,12 +73,12 @@ public class BasicBlockEntity extends BlockEntity{
     }
 
     public void update(){
-        if(needsStateUpdate && level != null){
+        if(needsStateUpdate){
             setChanged();
-            if(level != null){
-                level.setBlockAndUpdate(this.worldPosition, getBlockState());
-            }
             needsStateUpdate = false;
+        }
+        if(level != null && needsBlockUpdate){
+            level.setBlockAndUpdate(this.worldPosition, getBlockState());
         }
         if(needsModelUpdate && level != null){
             requestModelDataUpdate();
@@ -84,9 +87,20 @@ public class BasicBlockEntity extends BlockEntity{
     }
 
     public void tick(){
+        if(level.isClientSide){
+            updateClient();
+        }else {
+            updateServer();
+        }
         update();
     }
 
+    public void updateClient(){
+
+    }
+    public void updateServer(){
+
+    }
 
     @NotNull
     @Override
@@ -134,26 +148,36 @@ public class BasicBlockEntity extends BlockEntity{
 
     protected SegmentedItemStackHandler createSegmentedInventory(int size, SegmentedItemStackHandler.InventorySegment... s){
         return new SegmentedItemStackHandler(size,s){
-            @NotNull
             @Override
-            public ItemStack extractItem(int slot, int amount, boolean simulate){
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
                 needsStateUpdate = true;
                 BasicBlockEntity.this.update();
-                return super.extractItem(slot, amount, simulate);
-            }
-
-            @NotNull
-            @Override
-            public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate){
-                needsStateUpdate = true;
-                BasicBlockEntity.this.update();
-                return super.insertItem(slot, stack, simulate);
             }
         };
     }
 
     public MenuProvider getMenu(){
         return null;
+    }
+
+    public void drops() {
+        int totalSlots = 0;
+        for(var sf:syncedFields){
+            if(sf.get() instanceof ItemStackHandler s){
+                totalSlots+=s.getSlots();
+            }
+        }
+        SimpleContainer inventory = new SimpleContainer(totalSlots);
+        int index = 0;
+        for(var sf:syncedFields){
+            if(sf.get() instanceof ItemStackHandler s){
+                for(int i = 0;i<s.getSlots();i++)
+                    inventory.setItem(index++,s.getStackInSlot(i));
+            }
+        }
+
+        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
 

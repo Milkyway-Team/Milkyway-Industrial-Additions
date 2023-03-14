@@ -1,13 +1,20 @@
 package com.mw_team.mw_industry_additions.blocks.entities;
 
+import com.mw_team.mw_industry_additions.utils.Cons;
 import net.minecraft.nbt.*;
 import net.minecraftforge.items.*;
+import org.mini2Dx.gdx.utils.Array;
 
+/**
+ * A field that auto marks the entity as dirty, auto saves and has listeners for changes.
+ * @param <T>
+ */
 public abstract class SyncedField<T>{
     public SyncedField(BasicBlockEntity bbe, String name){
         this.bbe = bbe;
         this.name = name;
     }
+    Array<Cons<SyncedField<T>>> listeners = new Array<>();
 
     BasicBlockEntity bbe;
 
@@ -27,7 +34,7 @@ public abstract class SyncedField<T>{
 
     public abstract SyncedField<T> set(T value);
 
-    public void OnChanged(){
+    public void onChanged(){
         if(syncWhenChanged){
            bbe.needsStateUpdate = true;
         }
@@ -37,6 +44,11 @@ public abstract class SyncedField<T>{
         if(syncImmediatelyOnChange){
             bbe.update();
         }
+        listeners.forEach(c->c.get(this));
+    }
+
+    public void addListener(Cons<SyncedField<T>> c){
+        listeners.add(c);
     }
 
     public static class FloatField extends SyncedField<Float>{
@@ -54,6 +66,7 @@ public abstract class SyncedField<T>{
         @Override
         public void load(CompoundTag pTag){
             value = pTag.getFloat(name);
+            onChanged();
         }
 
         public Float get(){
@@ -70,7 +83,7 @@ public abstract class SyncedField<T>{
                 return this;
             }
             this.value = value;
-            OnChanged();
+            onChanged();
             return this;
         }
 
@@ -79,7 +92,7 @@ public abstract class SyncedField<T>{
                 return this;
             }
             this.value += value;
-            OnChanged();
+            onChanged();
             return this;
         }
     }
@@ -101,15 +114,21 @@ public abstract class SyncedField<T>{
                 return this;
             }
             this.value = value;
-            OnChanged();
+            onChanged();
             return this;
         }
     }
 
     public static class IntArrayField extends ObjectField<int[]>{
 
-        public IntArrayField(BasicBlockEntity bbe, String name){
+        public IntArrayField(BasicBlockEntity bbe, String name, int length){
             super(bbe, name);
+            set(new int[length]);
+        }
+
+        public void set(int index,int val){
+            get()[index] =val;
+            onChanged();
         }
 
         @Override
@@ -120,10 +139,11 @@ public abstract class SyncedField<T>{
         @Override
         public void load(CompoundTag pTag){
             set(pTag.getIntArray(name));
+            onChanged();
         }
     }
 
-    public static class InventoryField extends ObjectField<ItemStackHandler>{
+    public static class InventoryField<T extends ItemStackHandler> extends ObjectField<T>{
 
         public InventoryField(BasicBlockEntity bbe, String name){
             super(bbe, name);

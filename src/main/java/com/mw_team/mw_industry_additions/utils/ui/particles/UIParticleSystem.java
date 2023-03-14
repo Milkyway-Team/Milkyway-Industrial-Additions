@@ -2,6 +2,7 @@ package com.mw_team.mw_industry_additions.utils.ui.particles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mw_team.mw_industry_additions.client.screen.AnimatedScreen;
+import com.mw_team.mw_industry_additions.utils.ui.SpriteDrawer;
 import org.mini2Dx.gdx.utils.*;
 
 public class UIParticleSystem{

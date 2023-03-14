@@ -1,7 +1,7 @@
 package com.mw_team.mw_industry_additions.client.screen;
 
 import com.mw_team.mw_industry_additions.blocks.entity.BasicModResultSlot;
-import com.mw_team.mw_industry_additions.blocks.entity.TradeStationEntity;
+import com.mw_team.mw_industry_additions.blocks.entities.TradeStationEntity;
 import com.mw_team.mw_industry_additions.init.ModBlocks;
 import com.mw_team.mw_industry_additions.init.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;

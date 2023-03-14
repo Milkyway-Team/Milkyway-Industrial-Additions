@@ -70,21 +70,21 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
     public ItemStack insertIntoSegment(InventorySegment segment, ItemStack stack){
         ItemStack stackcpy = stack.copy();
         for(int i : segment.slots){
-            int left = insertItem(i, stackcpy, false).getCount();
-            stackcpy.setCount(left);
-            if(left == 0){
+            stackcpy = insertItem(i, stackcpy, false);
+            if(stackcpy.getCount() == 0){
                 break;
             }
         }
         return stackcpy;
     }
 
-    public void transferIntoSegment(InventorySegment segment, int slot){
+    public ItemStack transferSlotIntoSegment(InventorySegment segment, int slot){
         ItemStack is = getStackInSlot(slot);
         is.setCount(insertIntoSegment(segment, is).getCount());
         if(getSegment(slot).syncOnChange){
             onContentsChanged(slot);
         }
+        return is;
     }
 
 
@@ -109,6 +109,11 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
             }
         }
         return false;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return getSegment(slot).maxItems;
     }
 
     /**
@@ -138,7 +143,17 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
         return slotsOfSide(dir).length>0;
     }
 
-
+    @Override
+    protected void onContentsChanged(int slot) {
+        super.onContentsChanged(slot);
+        var seg = getSegment(slot);
+        if(seg!=null){
+            int rslot = seg.getRelativeSlot(slot);
+            for (SegmentItemListener listener : seg.listeners) {
+                listener.onChange(rslot);
+            }
+        }
+    }
 
     public static class SidedSegmentedInvWrapper implements IItemHandlerModifiable{
         protected final SegmentedItemStackHandler inv;
@@ -242,7 +257,12 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
         public int[] slots;
         boolean[] insertFrom = new boolean[6], extractFrom = new boolean[6];
         int maxItems = 64;
-        boolean syncOnChange = false;
+        boolean syncOnChange = true;
+        boolean canManuallyInsert = true;
+        boolean canManuallyExtract = true;
+
+        Array<SegmentItemListener> listeners = new Array<>();
+
 
         public static InventorySegment of(String name, int... slots){
             InventorySegment is = new InventorySegment();
@@ -321,5 +341,56 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
             this.syncOnChange = b;
             return this;
         }
+
+        public InventorySegment canManuallyInsert(boolean canManuallyInsert) {
+            this.canManuallyInsert = canManuallyInsert;
+            return this;
+        }
+
+        public InventorySegment setCanManuallyExtract(boolean canManuallyExtract) {
+            this.canManuallyExtract = canManuallyExtract;
+            return this;
+        }
+
+        public ItemStack getItemInSlot(int relativeSlot){
+            if(inventory!=null)
+                return inventory.getStackInSlot(slots[relativeSlot]);
+            return ItemStack.EMPTY;
+        }
+
+        public boolean isFull(){
+            for(int i = 0; i < slots.length; i++){
+                ItemStack stack = inventory.getStackInSlot(slots[i]);
+                if(stack.isEmpty() || stack.getCount() < maxItems){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public SegmentedItemStackHandler getInventory() {
+            return inventory;
+        }
+
+        public int size(){
+            return slots.length;
+        }
+
+        public int getRelativeSlot(int absoluteSlot){
+            for(int i = 0; i < slots.length; i++){
+                if(slots[i]==absoluteSlot){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public void addListener(SegmentItemListener s){
+            listeners.add(s);
+        }
+    }
+
+    public interface SegmentItemListener{
+        public void onChange(int slot);
     }
 }

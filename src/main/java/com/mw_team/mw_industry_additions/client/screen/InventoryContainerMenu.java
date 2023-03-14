@@ -1,8 +1,11 @@
 package com.mw_team.mw_industry_additions.client.screen;
 
 import com.mw_team.mw_industry_additions.meta.inventory.ContainerWrapper;
+import com.mw_team.mw_industry_additions.meta.inventory.SegmentSlot;
+import com.mw_team.mw_industry_additions.meta.inventory.SegmentedItemStackHandler;
 import com.mw_team.mw_industry_additions.utils.Utils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -59,6 +62,14 @@ public class InventoryContainerMenu extends AbstractContainerMenu {
             this.addSlot(new SlotItemHandler(pl, m+index, x , y+ m * 18));
         }
     }
+    public void addColumn(SegmentedItemStackHandler.InventorySegment pl,int x, int y){
+        if(pl==null){
+            return;
+        }
+        for (int m = 0; m < pl.slots.length; ++m) {
+            this.addSlot(new SegmentSlot(pl, pl.slots[m], x , y+ m * 18));
+        }
+    }
 
     public void addRow(Container pl, int index, int x,int y, int amount){
         for (int m = 0; m < amount; ++m) {
@@ -71,10 +82,28 @@ public class InventoryContainerMenu extends AbstractContainerMenu {
         }
     }
 
+
+
     public void addGrid(IItemHandler pl, int index, int x, int y, int w, int h){
         for (int m = 0; m < w; ++m) {
             for (int o = 0; o < h; ++o) {
                 this.addSlot(new SlotItemHandler(pl, index++, x+ m * 18, y + o * 18));
+            }
+        }
+    }
+
+    public void addGrid(SegmentedItemStackHandler.InventorySegment pl,int x, int y, int w, int spacing){
+        if(pl==null){
+            return;
+        }
+        int h = Mth.ceil(pl.slots.length/(float)w);
+        int index = 0;
+        for (int m = 0; m < w; ++m) {
+            for (int o = 0; o < h; ++o) {
+                if(index>= pl.slots.length){
+                    return;
+                }
+                this.addSlot(new SegmentSlot(pl, pl.slots[index++], x+ m * (18+spacing), y + o * (18+spacing)));
             }
         }
     }

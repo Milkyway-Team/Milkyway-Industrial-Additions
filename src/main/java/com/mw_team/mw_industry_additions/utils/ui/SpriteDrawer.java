@@ -1,6 +1,5 @@
 package com.mw_team.mw_industry_additions.utils.ui;
 
-import com.mojang.blaze3d.shaders.Shader;
 import com.mojang.blaze3d.systems.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
@@ -12,7 +11,6 @@ import com.mw_team.mw_industry_additions.utils.Mathf;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
-import net.minecraft.util.Mth.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 
@@ -115,7 +113,18 @@ public class SpriteDrawer{
         RenderSystem.enableBlend();
         begin();
     }
-
+    public void pushMatrix(){
+        getPoseStack().pushPose();
+    }
+    public void popMatrix(){
+        getPoseStack().popPose();
+    }
+    public void translate(float x,float y){
+        translate(x,y,0);
+    }
+    public void translate(float x,float y,float z){
+        getPoseStack().translate(x,y,z);
+    }
 
     public float[] color = {1,1,1,1};
 
@@ -149,35 +158,35 @@ public class SpriteDrawer{
     private TextureRegion polygontex;
     private boolean initVertex = false;
     private boolean initpVertex = false;
-    public void beginPolygon(TextureRegion tr){
+    public void beginTriangleFan(TextureRegion tr){
         setMode(VertexFormat.Mode.TRIANGLES);
         polygontex = tr;
         setTexture(tr.getTexid());
     }
-    public void polygonVertex(float x, float y, float u, float v){
+    public void triangleFanVertex(float x, float y, float u, float v){
         if(!initVertex){
             initVertexPolygon = new Vec2(x,y);
-            texLocPolygon = new Vec2(u/polygontex.w,v/polygontex.h);
+            texLocPolygon = new Vec2(polygontex.relU(u),polygontex.relV(v));
             initVertex = true;
             return;
         }
         if(!initpVertex){
             pinitVertexPolygon = new Vec2(x,y);
-            ptexLocPolygon = new Vec2(u/polygontex.w,v/polygontex.h);
+            ptexLocPolygon = new Vec2(polygontex.relU(u),polygontex.relV(v));
             initpVertex = true;
             return;
         }
         setTexture(polygontex.getTexid());
         vertex(initVertexPolygon.x,initVertexPolygon.y,texLocPolygon.x,texLocPolygon.y);
         vertex(pinitVertexPolygon.x,pinitVertexPolygon.y,ptexLocPolygon.x,ptexLocPolygon.y);
-        vertex(x,y,u/polygontex.w,v/polygontex.h);
+        vertex(x,y,polygontex.relU(u),polygontex.relV(v));
         pinitVertexPolygon = new Vec2(x,y);
-        ptexLocPolygon = new Vec2(u/polygontex.w,v/polygontex.h);
+        ptexLocPolygon = new Vec2(polygontex.relU(u),polygontex.relV(v));
     }
     private void vertex(float x, float y, float u, float v){
-        bufferBuilder.vertex(getPoseStack().last().pose(), x, y, 0).color(color[0],color[1],color[2],color[3]).uv(u, v).endVertex();
+            bufferBuilder.vertex(getPoseStack().last().pose(), x, y, 0).color(color[0],color[1],color[2],color[3]).uv(u, v).endVertex();
     }
-    public void endPolygon(){
+    public void endTriangleFan(){
         initVertex = false;
         initpVertex = false;
     }
@@ -220,6 +229,10 @@ public class SpriteDrawer{
     }
     public void drawCentered(TextureRegion tr, float x, float y){
         draw(tr,x-tr.w*0.5f,y-tr.h*0.5f,tr.w,tr.h);
+    }
+
+    public void draw(TextureRegion tr, float x, float y){
+        draw(tr,x,y,tr.w,tr.h);
     }
     public void draw(TextureRegion tr, float x, float y, float w, float h){
         setMode(Mode.QUADS);

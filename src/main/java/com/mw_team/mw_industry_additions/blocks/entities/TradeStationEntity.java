@@ -1,4 +1,4 @@
-package com.mw_team.mw_industry_additions.blocks.entity;
+package com.mw_team.mw_industry_additions.blocks.entities;
 
 import com.mw_team.mw_industry_additions.client.screen.TradeStationMenu;
 import com.mw_team.mw_industry_additions.blocks.recipes.TradeStationRecipe;

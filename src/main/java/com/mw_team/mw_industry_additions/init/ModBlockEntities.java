@@ -1,7 +1,7 @@
 package com.mw_team.mw_industry_additions.init;
 
 import com.mw_team.mw_industry_additions.IndustrialAdditions;
-import com.mw_team.mw_industry_additions.blocks.entity.TradeStationEntity;
+import com.mw_team.mw_industry_additions.blocks.entities.TradeStationEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

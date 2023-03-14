@@ -14,7 +14,7 @@ public class FrameState<T>{
         this.weight = 1;
     }
 
-    public static <T> FrameState<T> get(T val, float weight){
-        return new FrameState<>(val,weight);
+    public static <T> FrameState<T> get(T val, float durationProportion){
+        return new FrameState<>(val,durationProportion);
     }
 }

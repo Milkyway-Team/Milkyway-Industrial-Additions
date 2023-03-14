@@ -50,9 +50,9 @@ public abstract class UIParticle{
 
         public static RenderAffectors FADE_IN  = new RenderAffectors((a,b,p)-> {
             float[] c = RenderSystem.getShaderColor();
-            RenderSystem.setShaderColor(c[0], c[1], c[2], Math.min(1.0f,p.life*0.1f));
+            RenderSystem.setShaderColor(c[0], c[1], c[2], Math.min(1.0f,p.life*0.05f));
         });
-        public static RenderAffectors ADD_BLEND  = new RenderAffectors((a,b,p)-> RenderSystem.blendFunc(SourceFactor.ONE,DestFactor.ONE));
+        public static RenderAffectors ADD_BLEND  = new RenderAffectors((a,b,p)-> b.additiveBlendMode());
         public static RenderAffectors NORM_BLEND  = new RenderAffectors((a,b,p)-> RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA));
     }
 }

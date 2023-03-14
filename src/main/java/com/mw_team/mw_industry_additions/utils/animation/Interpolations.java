@@ -69,6 +69,9 @@ public class Interpolations{
         LINEAR((p, pt, x,x2,a, at, t, w) -> {
             return t*(x2-x)+x;
         }),
+        SMOOTH_STEP((p, pt,x,x2, a, at, t, w) -> {
+            return (float)(3*t*t-2*t*t*t)*(x2-x)+x;
+        }),
         EXPONENTIAL((p, pt,x,x2, a, at, t, w) -> {
             return (float)(1-Math.exp(-t*w)*(1-t))*(x2-x)+x;
         }),

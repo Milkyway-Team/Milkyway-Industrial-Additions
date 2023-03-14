@@ -1,14 +1,12 @@
 package com.mw_team.mw_industry_additions.blocks;
 
 import com.mw_team.mw_industry_additions.blocks.entities.*;
-import com.mw_team.mw_industry_additions.client.screen.BloomeryChamberContainer;
 import com.mw_team.mw_industry_additions.init.*;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.*;
 import net.minecraft.world.level.*;
@@ -52,10 +50,21 @@ public class BloomeryChamber extends Block implements EntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if(!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof final BloomeryChamberEntity chest){
-            final MenuProvider container = chest.getMenu();
+        if(!pLevel.isClientSide && pLevel.getBlockEntity(pPos) instanceof final BloomeryChamberEntity entity){
+            final MenuProvider container = entity.getMenu();
             NetworkHooks.openGui((ServerPlayer) pPlayer, container, pPos );
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof BloomeryChamberEntity be) {
+                be.drops();
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 }

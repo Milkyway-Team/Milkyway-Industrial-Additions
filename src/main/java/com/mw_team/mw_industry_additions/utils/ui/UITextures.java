@@ -51,13 +51,17 @@ public class UITextures{
     public static TextureRegion leftTriangle = new TextureRegion(80,16,16,16,TEXTURE);
 
     public static TextureRegion[] insetrunes = new TextureRegion[3];
+    public static TextureRegion[] numbers = new TextureRegion[10];
 
     public static TextureRegion blanksquare = new TextureRegion(0,253,3,3,TEXTURE);
-    public static TextureRegion entireTexture = new TextureRegion(0f,1,0,1f,256,256,TEXTURE);
+    public static TextureRegion entireTexture = new TextureRegion(256,256,TEXTURE);
 
     static {
         for(int i = 0;i<insetrunes.length;i++){
             insetrunes[i] = new TextureRegion(i*8,128,7,7,TEXTURE);
+        }
+        for(int i = 0;i<numbers.length;i++){
+            numbers[i] = new TextureRegion(i*6,179,5,7,TEXTURE);
         }
     }
 }

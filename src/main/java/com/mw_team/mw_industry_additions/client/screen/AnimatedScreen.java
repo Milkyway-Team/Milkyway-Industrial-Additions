@@ -18,6 +18,7 @@ import com.mw_team.mw_industry_additions.utils.ui.components.UIHandler;
 import com.mw_team.mw_industry_additions.utils.ui.particles.UIParticleSystem;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Timer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,7 +38,7 @@ import java.util.Optional;
 
 public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends AbstractContainerScreen<T> {
     float tick=0;
-    public float duration=100;
+    private long prevTime = 0;
     public StateMap stateMap;
     public UIParticleSystem particles;
     public UIHandler ui;
@@ -57,17 +58,22 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
     @Override
     protected void init() {
         super.init();
+        prevTime = System.currentTimeMillis();
     }
 
     public abstract void updateLogic();
 
-    public int ox,oy;
+    public int ox,oy, originX,originY;
     @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta){
+        tick += (System.currentTimeMillis()-prevTime)/1000f;
+        prevTime = System.currentTimeMillis();
         spriteDrawer.reset(matrices);
         if(ox==0||oy==0){
             ox=leftPos;oy=topPos;
         }
+        originX = (width - imageWidth) / 2;
+        originY = (height - imageHeight) / 2;
         particles.update();
         ui.update();
         updateLogic();
@@ -89,9 +95,13 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
         matrices.popPose();
 
         super.render(matrices, mouseX, mouseY, delta);
-
+        renderTop();
 
         renderTooltip(matrices, mouseX, mouseY);
+    }
+
+    public void renderTop(){
+
     }
     //fuck you handled screen
 
@@ -153,7 +163,7 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     }
     public void additiveBlendMode(){
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
     }
 
     public void reset(){
@@ -183,7 +193,8 @@ public abstract class AnimatedScreen <T extends InventoryContainerMenu> extends 
         if(tr.getTexid()!=RenderSystem.getTextureId(0)){
             RenderSystem.setShaderTexture(0,tr.texture);
         }
-        blit(matrices, x, y, (int)(tr.u*tr.w), (int)(tr.v*tr.h), (int)(tr.w), (int)(tr.h));
+        var tex  = tr.rawTex;
+        blit(matrices, x, y, (int)(tr.x), (int)(tr.y), (int)(tr.w), (int)(tr.h));
     }
 
     public void drawTexturedQuadWH(PoseStack matrices, float[][] pos, float u, float v, float regionWidth, float regionHeight) {

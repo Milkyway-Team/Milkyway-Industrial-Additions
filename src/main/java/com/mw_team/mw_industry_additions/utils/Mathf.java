@@ -41,7 +41,7 @@ public class Mathf{
     public static float randFloat(float max){
         return rand.nextFloat()*max;
     }
-    public static float randInt(int exclusiveMax){
+    public static int randInt(int exclusiveMax){
         return rand.nextInt(exclusiveMax);
     }
     public static float randFloat(float min,float max){
@@ -100,6 +100,23 @@ public class Mathf{
         float t2 = t*t;
         float t3 = t2*t;
         return  (t3 - 2*t2 + t)*m1 + (-2*t3 + 3*t2) + (t3-t2)*m2;
+    }
+
+    /**
+     * x ^ e
+     * @param x
+     * @param e
+     * @return
+     */
+    public static int intPow(int x,int e){
+        if(e<0){
+            return 0;
+        }
+        int total = 1;
+        for(int i = 0;i<e;i++){
+           total*=x;
+        }
+        return total;
     }
     public static Quaternion fromEulerDegXYZ(float x, float y, float z){
         return Quaternion.fromXYZ(x*RADIANS_PER_DEGREE,y*RADIANS_PER_DEGREE,z*RADIANS_PER_DEGREE);
