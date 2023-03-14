@@ -160,6 +160,8 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
         protected final Direction[] side;
 
         int[] slots;
+        boolean[] canInsert;
+        boolean[] canExtract;
 
         public SidedSegmentedInvWrapper(SegmentedItemStackHandler inv, Direction[] side){
             this.inv = inv;
@@ -181,9 +183,13 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
                 }
             }
             slots = new int[Utils.Count(slotsOpen,true)];
+            canInsert = new boolean[slots.length];
+            canExtract = new boolean[slots.length];
             int index = 0;
             for(int i = 0;i<slotsOpen.length;i++){
                 if(slotsOpen[i]){
+                    canInsert[index] = inv.getSegment(i).canInsertFrom(side);
+                    canExtract[index] = inv.getSegment(i).canExtractFrom(side);
                     slots[index++] = i;
                 }
             }
@@ -221,7 +227,7 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
                 return ItemStack.EMPTY;
             }
             int actualslot = getSlot(slot);
-            if(actualslot< 0 || actualslot > inv.getSlots()){
+            if(actualslot< 0 || actualslot > inv.getSlots() || !canInsert[slot]){
                 return stack;
             }
             return inv.insertItem(actualslot,stack,simulate);
@@ -234,7 +240,7 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
                 return ItemStack.EMPTY;
             }
             int actualslot = getSlot(slot);
-            if(actualslot< 0 || actualslot > inv.getSlots()){
+            if(actualslot< 0 || actualslot > inv.getSlots()|| !canExtract[slot]){
                 return ItemStack.EMPTY;
             }
             return inv.extractItem(actualslot,amount,simulate);
@@ -350,6 +356,24 @@ public class SegmentedItemStackHandler extends ItemStackHandler{
         public InventorySegment setCanManuallyExtract(boolean canManuallyExtract) {
             this.canManuallyExtract = canManuallyExtract;
             return this;
+        }
+
+        public boolean canInsertFrom(Direction... dir){
+            for(Direction d: dir){
+                if(insertFrom[d.ordinal()]){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean canExtractFrom(Direction... dir){
+            for(Direction d: dir){
+                if(extractFrom[d.ordinal()]){
+                    return true;
+                }
+            }
+            return false;
         }
 
         public ItemStack getItemInSlot(int relativeSlot){

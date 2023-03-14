@@ -119,15 +119,15 @@ public class BloomeryChamberScreen extends AnimatedScreen<BloomeryChamberMenu> {
             if(Mathf.randFloat(15)<glowStrength[i]){
                 Vec2 randp = Mathf.randVec2().scale(4);
                 particles.add(new DistortableUIParticle(processingSlots[i].x + randp.x+9, processingSlots[i].y + randp.y+9, 1, randp.x, randp.y, spark[Mathf.randInt(3)],
-                        DistortableUIParticle.noiseDistort(4,0.05f))).renderAffectors = new RenderAffectors[]{FADE_IN_OUT};
+                        DistortableUIParticle.noiseDistort(6,0.04f))).renderAffectors = new RenderAffectors[]{FADE_IN_OUT};
             }
         }
         //particles.
         mainGlow = max;
         if(Mathf.randFloat(8)<mainGlow){
             Vec2 randp = Mathf.randVec2().scale(3);
-            particles.add(new DistortableUIParticle(88 + randp.x*10f, 102 + randp.y, 1, randp.x, randp.y-4, spark[Mathf.randInt(3)],
-                    DistortableUIParticle.noiseDistort(4,0.05f))).renderAffectors = new RenderAffectors[]{FADE_IN_OUT};
+            particles.add(new DistortableUIParticle(88 + randp.x*10f, 102 + randp.y, 1, randp.x, randp.y-3, spark[Mathf.randInt(3)],
+                    DistortableUIParticle.noiseDistort(6,0.04f))).renderAffectors = new RenderAffectors[]{FADE_IN_OUT};
         }
     }
 
